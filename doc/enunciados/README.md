@@ -3,86 +3,173 @@
 ## 1. En Programación Orientada a Objetos (POO), ¿Qué buscan la **encapsulación** y **la ocultación** de información? Enumera brevemente algunas ventajas de la ocultación de información.
 
 ### Respuesta
+Es como un escudo; añade protección a mi clase (que es un artefacto con estado y comportamiento). Me permite ocultar miembros al exterior para:
+
+Garantizar que mi estado interno es siempre válido.
+
+Evitar que otro código dependa o acceda a partes que no quiero.
+
+Facilitar poder cambiar partes internas sin afectar a otros.
 
 
 ## 2. ¿Qué se entiende por la **interfaz pública** de un objeto o clase en POO? Describe brevemente cómo se relaciona con la ocultación de información.
 
 ### Respuesta
+Son los miembros que se ven desde otras clases, es decir, lo que no está oculto.
 
 
 ## 3. Brevemente: ¿Por qué hay que ser conscientes y diseñar con cuidado la **interfaz pública** de una clase? ¿Es fácil cambiarla?
 
 ### Respuesta
+La interfaz pública, si se cambia, tiene más consecuencias que si cambio las partes ocultas, porque el código de terceros depende de ella.
 
 
 ## 4. ¿Qué son las **invariantes de clase** y por qué la ocultación de información nos ayuda?
 
 ### Respuesta
+Reglas (condiciones) que siempre se cumplen durante toda la vida de los objetos.
+Nos referimos habitualmente al estado interno (el tipo de variables también son invariantes).
+Ejemplos: Saldo de cuenta bancaria siempre positivo, o que una edad no sea negativa.
+La ocultación garantiza que desde el exterior no se modifique el estado a valores que violen la invariante.
 
 
 ## 5. Pon un ejemplo de una clase `Punto` en `Java`, con dos coordenadas, `x` e `y`, de tipo `double`, con un método `calcularDistanciaAOrigen`, y que haga uso de la ocultación de información. ¿Cuál es la interfaz pública de la clase `Punto`? ¿Qué significa `public` y `private`?
 
 ### Respuesta
+public class Punto {
+    // Atributos privados: Ocultación
+    private double x;
+    private double y;
+
+    //Constructor: Interfaz pública
+    public Punto(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    // Método: Interfaz pública
+    public double calcularDistanciaAOrigen() {
+        return Math.sqrt(x * x + y * y);
+    }
+}
+public: Miembros accesibles desde cualquier código de otras clases.
+
+private: Miembros solo accesibles desde el código de la propia clase.
 
 
 ## 6. En Java, ¿A quiénes se pueden aplicar los modificadores `public` o `private`?
 
 ### Respuesta
+public: Se aplica a clases y a miembros.
+
+private: Se aplica a miembros y a clases internas (no cerramos las principales).
 
 
 ## 7. En POO, la visibilidad puede ser pública o privada, pero ¿existen más tipos de visibilidad? ¿Qué ocurre en Java? ¿Y en otros lenguajes?
 
 ### Respuesta
+Sí, existen más:
+
+protected: Relacionado con herencia.
+
+Sin modificador ("package-private"): Visible solo dentro del mismo paquete.
 
 
 ## 8. Responde: Los miembros de instancia privados de un objeto están ocultos para (a) otras clases o (b) otras instancias, aunque sean de la misma clase. Pon un ejemplo añadiendo un método `calcularDistanciaAPunto(Punto otro)` y explica la respuesta.
 
 ### Respuesta
+Los miembros privados están ocultos para (a) otras clases. Se considera un mecanismo de seguridad en la programación.
 
+Nota: Una instancia puede acceder a los miembros privados de otra instancia si ambas pertenecen a la misma clase.
+
+public double calcularDistanciaAPunto(Punto otro) {
+    // Se accede a otro.x y otro.y porque el código reside dentro de la clase Punto
+    double dx = otro.x - this.x;
+    double dy = otro.y - this.y;
+    return Math.sqrt(dx * dx + dy * dy);
+}
 
 ## 9. ¿Qué son los métodos "getter" y "setter" en los lenguajes orientados a objetos?
 
 ### Respuesta
+Métodos públicos diseñados para leer o modificar de forma controlada el valor de atributos privados.
+Getter: Método público para retornar el valor de un atributo privado (acceso de lectura).
+Setter: Método público para asignar un valor a un atributo privado (acceso de escritura).
 
 
 ## 10. Cuando nos referimos a que la ocultación de información mejora la "seguridad" del programa, ¿nos referimos a que no pueda ser "hackeado"?
 
 ### Respuesta
+Se refiere a reducir errores de programación, no a evitar hackeos.
 
 
 ## 11. ¿Qué diferencia hay entre **miembro de instancia** y **miembro de clase**? ¿Los miembros de clase también se pueden ocultar?
 
 ### Respuesta
+De clase (static): Compartido por todas las instancias. No existe el this. Se puede ocultar.
+
+De instancia: Asociado a cada objeto individual.
 
 
 ## 12. Brevemente: ¿Tiene sentido que los constructores sean privados?
 
 ### Respuesta
+Tienen sentido para:
+
+Usar métodos factoría.
+
+Clases de solo miembros estáticos.
+
+Controlar el número de instancias (Singleton).
 
 
 ## 13. ¿Cómo se indican los **miembros de clase** en Java? Pon un ejemplo, en la clase `Punto` definida anteriormente, para que incluya miembros de clase que permitan saber cuáles son los valores `x` e `y` máximos que se han establecido en todos los puntos que se hayan creado hasta el momento.
 
 ### Respuesta
+public class Punto {
+    private double x, y;
+    private static double maxX = 0; // Oculto y compartido
+    private static double maxY = 0;
+
+    public Punto(double x, double y) {
+        this.x = x; this.y = y;
+        if (x > maxX) maxX = x;
+        if (y > maxY) maxY = y;
+    }
+}
 
 
 ## 14. Como sería un método factoría dentro de la clase `Punto` para construir un `Punto` a partir de dos coordenadas, pero que las redondee al entero más cercano. Escribe sólo el código del método, no toda la clase ¿Has usado `static`? 
 
 ### Respuesta
+public static Punto crearPuntoRedondeado(double x, double y) {
+    return new Punto(Math.round(x), Math.round(y));
+}
+Se usa static porque el método pertenece a la clase.
 
 
 ## 15. Cambia la implementación de `Punto`. En vez de dos `double`, emplea un array interno de dos posiciones, intentando no modificar la interfaz pública de la clase.
 
 ### Respuesta
+public class Punto {
+    private double[] coords = new double[2]; // Estado oculto modificado
+    public Punto(double x, double y) {
+        coords[0] = x; coords[1] = y;
+    }
+}
 
 
 ## 16. Si un atributo va a tener un método "getter" y "setter" públicos, ¿no es mejor declararlo público? ¿Cuál es la convención más habitual sobre los atributos, que sean públicos o privados? ¿Tiene esto algo que ver con las "invariantes de clase"?
 
 ### Respuesta
-
+No deben ser públicos porque se pierde el control para garantizar invariantes y la flexibilidad para cambiar la implementación.
 
 ## 17. ¿Qué significa que una clase sea **inmutable**? ¿qué es un método modificador? ¿Un método modificador es siempre un "setter"? ¿Tiene ventajas que una clase sea inmutable?
 
 ### Respuesta
+Inmutable: El estado no cambia tras la creación.
+
+Modificador: Método que cambia el estado (no siempre es un setter).
 
 
 ## 18. ¿Es recomendable incluir métodos "setter" siempre y como convención?
